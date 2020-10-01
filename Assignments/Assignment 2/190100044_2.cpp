@@ -1,154 +1,287 @@
 #include <iostream>
 #include <string>
+#include <vector>
 
-// a=97
-int size;
+#define ull unsigned long long int
 
-namespace first {
-int **mat_nn;
+using namespace std;
 
-long long int *matrix_mul(long long int *in_mat, long long int &sum) {
-  long long int *out_mat = new long long int[size];
-  for (int i = 0; i < size; i++) {
-    out_mat[i] = 0;
-    for (int j = 0; j < size; j++) {
-      out_mat[i] += mat_nn[i][j] * in_mat[j];
-    }
-    sum += out_mat[i];
-  }
-  return out_mat;
-}
+// Fibonacci Word
+// f(a) = "ab"
+// f(b) = "a"
+class Fibo {
+public:
+  int set_size = 2;
+  vector<ull> lengths;
+  string f_a = "ab", f_b = "a";
 
-bool mat_len_equal(long long int *mat1, long long int *mat2) {
-  long long int count1 = 0, count2 = 0;
-  for (int i = 0; i < size; i++) {
-    count1 += mat1[i];
-    count2 += mat2[i];
-    // if (mat1[i] != mat2[i])
-    //   return false;
-  }
-  return count1 == count2;
-}
-
-long long int general(long long int n) {
-  if (n == 0) {
-    return 1;
+  Fibo() {
+    cout << "Fibo found\n";
+    return;
   }
 
-  long long int len = 0;
-  long long int *mat = new long long int[size];
-  for (int i = 0; i < size; i++) {
-    mat[i] = mat_nn[i][0];
-    len += mat[i];
+  void zeroth(ull n) {
+    cout << "0//" << n << "\n";
+    return;
   }
-  mat[0]--;
-  long long int *mat_;
-  long long int i = 1;
-  int rep = 0;
-  for (; (i < n) && (rep < 12); i++) {
-    mat_ = matrix_mul(mat, len);
-    if (mat_len_equal(mat_, mat))
-      rep++;
-    else
-      rep = 0;
-    mat = mat_;
+  void first(ull n) {
+    cout << "1//" << n << "\n";
+    return;
   }
-  if (i < n) {
-    std::cout << "Hi\n";
-    long long int count = 0;
-    for (int i = 0; i < size; i++) {
-      count += mat_[i];
-    }
-    len += (n - i) * count;
+  void second(string s) {
+    cout << "2//" << s << "\n";
+    return;
   }
-
-  // long long int len = 0;
-  // for (int i = 0; i < size; i++) {
-  //   len += mat[i];
-  // }
-  return len;
-}
-
-void init(std::string f[]) {
-  mat_nn = new int *[size];
-  for (int i = 0; i < size; ++i) {
-    mat_nn[i] = new int[size];
+  void third(string s) {
+    cout << "3//" << s << "\n";
+    return;
   }
-
-  for (int i = 0; i < size; i++) {
-    for (int j = 0; j < size; j++) {
-      mat_nn[i][j] = 0;
+  void run() {
+    int ops;
+    cin >> ops;
+    int choice;
+    ull n;
+    string s;
+    for (int i = 0; i < ops; i++) {
+      cin >> choice;
+      if (choice == 0) {
+        cin >> n;
+        zeroth(n);
+      } else if (choice == 1) {
+        cin >> n;
+        first(n);
+      } else if (choice == 2) {
+        cin >> ws;
+        getline(cin, s);
+        second(s);
+      } else if (choice == 3) {
+        cin >> ws;
+        getline(cin, s);
+        third(s);
+      } else {
+        cout << endl;
+      }
     }
   }
+};
 
-  for (int i = 0; i < size; i++) {
-    int len = f[i].length();
-    for (int j = 0; j < len; j++) {
-      mat_nn[int(f[i][j]) - 97][i]++;
-      // switch (f[i][j]) {
-      // case 'a':
-      //   mat_nn[i][0]++;
-      //   break;
-      // case 'b':
-      //   mat_nn[i][1]++;
-      //   break;
-      // case 'c':
-      //   mat_nn[i][2]++;
-      //   break;
-      // case 'd':
-      //   mat_nn[i][3]++;
-      //   break;
-      // case 'e':
-      //   mat_nn[i][4]++;
-      //   break;
-      // case 'f':
-      //   mat_nn[i][5]++;
-      //   break;
-      // default:
-      //   break;
-      // }
+// Thue-Morse Word
+// f(a) = "ab"
+// f(b) = "ba"
+class TM {
+public:
+  int set_size = 2;
+  vector<ull> lengths;
+  string f_a = "ab", f_b = "ba";
+
+  TM() {
+    cout << "TM found\n";
+    return;
+  }
+
+  void zeroth(ull n) {
+    cout << "0//" << n << "\n";
+    return;
+  }
+  void first(ull n) {
+    cout << "1//" << n << "\n";
+    return;
+  }
+  void second(string s) {
+    cout << "2//" << s << "\n";
+    return;
+  }
+  void third(string s) {
+    cout << "3//" << s << "\n";
+    return;
+  }
+  void run() {
+    int ops;
+    cin >> ops;
+    int choice;
+    ull n;
+    string s;
+    for (int i = 0; i < ops; i++) {
+      cin >> choice;
+      if (choice == 0) {
+        cin >> n;
+        zeroth(n);
+      } else if (choice == 1) {
+        cin >> n;
+        first(n);
+      } else if (choice == 2) {
+        cin >> ws;
+        getline(cin, s);
+        second(s);
+      } else if (choice == 3) {
+        cin >> ws;
+        getline(cin, s);
+        third(s);
+      } else {
+        cout << endl;
+      }
     }
   }
-}
+};
 
-} // namespace first
+// Exponential Word
+// Each f(x) had at least 2 characters
+// Length grows at least O(2^n)
+class Expo {
+public:
+  int set_size;
+  vector<ull> lengths;
+  string *fs;
+
+  Expo(int set_size_, string fs_[]) {
+    set_size = set_size_;
+    fs = new string[set_size];
+    for (int i = 0; i < set_size; i++) {
+      fs[i] = fs_[i];
+    }
+    cout << "Expo found\n";
+    return;
+  }
+
+  void zeroth(ull n) {
+    cout << "0//" << n << "\n";
+    return;
+  }
+  void first(ull n) {
+    cout << "1//" << n << "\n";
+    return;
+  }
+  void second(string s) {
+    cout << "2//" << s << "\n";
+    return;
+  }
+  void third(string s) {
+    cout << "3//" << s << "\n";
+    return;
+  }
+  void run() {
+    int ops;
+    cin >> ops;
+    int choice;
+    ull n;
+    string s;
+    for (int i = 0; i < ops; i++) {
+      cin >> choice;
+      if (choice == 0) {
+        cin >> n;
+        zeroth(n);
+      } else if (choice == 1) {
+        cin >> n;
+        first(n);
+      } else if (choice == 2) {
+        cin >> ws;
+        getline(cin, s);
+        second(s);
+      } else if (choice == 3) {
+        cin >> ws;
+        getline(cin, s);
+        third(s);
+      } else {
+        cout << endl;
+      }
+    }
+  }
+};
+
+// Linear Word
+// Bit of a weirdo
+class Linear {
+public:
+  int set_size;
+  string *fs;
+
+  Linear(int set_size_, string fs_[]) {
+    set_size = set_size_;
+    fs = new string[set_size];
+    for (int i = 0; i < set_size; i++) {
+      fs[i] = fs_[i];
+    }
+    cout << "Linear found\n";
+    return;
+  }
+
+  void zeroth(ull n) {
+    cout << "0//" << n << "\n";
+    return;
+  }
+  void first(ull n) {
+    cout << "1//" << n << "\n";
+    return;
+  }
+  void second(string s) {
+    cout << "2//" << s << "\n";
+    return;
+  }
+  void third(string s) {
+    cout << "3//" << s << "\n";
+    return;
+  }
+  void run() {
+    int ops;
+    cin >> ops;
+    int choice;
+    ull n;
+    string s;
+    for (int i = 0; i < ops; i++) {
+      cin >> choice;
+      if (choice == 0) {
+        cin >> n;
+        zeroth(n);
+      } else if (choice == 1) {
+        cin >> n;
+        first(n);
+      } else if (choice == 2) {
+        cin >> ws;
+        getline(cin, s);
+        second(s);
+      } else if (choice == 3) {
+        cin >> ws;
+        getline(cin, s);
+        third(s);
+      } else {
+        cout << endl;
+      }
+    }
+  }
+};
 
 int main() {
-  std::cin >> size;
+  int set_size;
+  cin >> set_size >> ws;
 
-  std::string f[size];
-  for (int i = 0; i < size; i++) {
-    std::cin >> f[i];
+  string fs[set_size];
+  for (int i = 0; i < set_size; i++) {
+    getline(cin, fs[i]);
+    cout << fs[i] << "\n";
   }
-  first::init(f);
+  // cout << endl;
 
-  long long int n;
-  std::cin >> n;
-  // for (int i = 0; i < 100; i++) first::general(n);
-  std::cout << first::general(n) << std::endl;
+  string morph_type;
+  if (set_size == 2 && fs[0] == "ab" && fs[1] == "a") {
+    Fibo morphism;
+    morphism.run();
+  } else if (set_size == 2 && fs[0] == "ab" && fs[1] == "ba") {
+    TM morphism;
+    morphism.run();
+  } else {
+    bool is_2_expo = true;
+    for (int i = 0; i < set_size; i++) {
+      if (fs[i].size() < 2)
+        is_2_expo = false;
+    }
+    if (is_2_expo) {
+      Expo morphism(set_size, fs);
+      morphism.run();
+    } else {
+      Linear morphism(set_size, fs);
+      morphism.run();
+    }
+  }
 
-  // first::mat_nn = new int *[n];
-  // for (int i = 0; i < n; ++i)
-  //   first::mat_nn[i] = new int[n];
-
-  // for (int i = 0; i < n; i++) {
-  //   for (int j = 0; j < n; j++) {
-  //     std::cin >> first::mat_nn[i][j];
-  //   }
-  // }
-
-  // int *in = new int[n];
-  // for (int i = 0; i < n; i++) {
-  //   std::cin >> in[i];
-  // }
-
-  // int *out = first::matrix_mul(in, n);
-
-  // for (int i = 0; i < n; i++) {
-  //   std::cout << out[i] << " ";
-  // }
-  // std::cout << std::endl;
-
-  delete first::mat_nn;
   return 0;
 }
