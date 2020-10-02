@@ -104,6 +104,7 @@ public:
   char at_index(ull i);
   string generate(int n);
   void substring(string pat);
+  void subsequence(string pat);
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -132,6 +133,7 @@ public:
   char at_index(ull i);
   string generate(int n);
   void substring(string pat);
+  void subsequence(string pat);
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -146,6 +148,7 @@ public:
   int set_size;
   vector<ull> lengths;
   string *fs;
+  int **matrix;
 
   Expo(int set_size_, string fs_[]);
 
@@ -154,10 +157,12 @@ public:
   void second(string s);
   void third(string s);
   void run();
+  void init_matrix();
+  void assign_length();
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////// Declaration: Linear Word ///////////////////////////
+////////////////////////// Declaration: Linear Word ////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Linear Word
@@ -201,11 +206,12 @@ void Fibo::first(ull n) {
 }
 void Fibo::second(string s) {
   // cout << "2//" << s << "\n";
-  substring(s);
+  substring(s); // Fix this
   return;
 }
 void Fibo::third(string s) {
-  cout << "3//" << s << "\n";
+  // cout << "3//" << s << "\n";
+  subsequence(s);
   return;
 }
 void Fibo::run() {
@@ -289,22 +295,56 @@ string Fibo::generate(int n) {
 void Fibo::substring(string pat) {
   int i = 0;
   ull n = pat.size();
-  for (; i < 61; i++) {
-    if (lengths[i] > n) {
+  for (; i < 87; i++) {
+    if (lengths[i] >= n) {
       break;
     }
   }
-  string txt = generate(i + 2);
-  // cout << i << endl;
+  string txt = generate(i + 3);
   ull index = KMPSearch(pat, txt);
-  // cout << txt.size() << endl;
-  // cout << index << endl;
-  if (index == txt.size()) {
-    cout << -1 << endl;
-  } else {
-    cout << index << endl;
+  ull last = index + n - 1;
+  for (int j = i; j < i + 4; j++) {
+    if (lengths[j] > last) {
+      cout << j << " " << index << endl;
+      return;
+    }
   }
+  cout << -1 << endl;
   return;
+}
+void Fibo::subsequence(string pat) {
+  int i = 0;
+  string::iterator pat_it = pat.begin();
+  ull n = 3 * pat.size();
+  for (; i < 87; i++) {
+    if (lengths[i] >= n) {
+      break;
+    }
+  }
+  string txt = generate(i);
+  string::iterator txt_it = txt.begin();
+
+  while (true) {
+    if (pat_it == pat.end()) {
+      ull index = txt_it - txt.begin();
+      for (int i = 0; i < 87; i++) {
+        if (lengths[i] >= index) {
+          cout << i << " " << index << endl;
+          return;
+        }
+      }
+    }
+    if (txt_it == txt.end()) {
+      cout << -1 << endl;
+      return;
+    }
+    if (*pat_it == *txt_it) {
+      pat_it++;
+      txt_it++;
+    } else {
+      txt_it++;
+    }
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -334,11 +374,12 @@ void TM::first(ull n) {
 }
 void TM::second(string s) {
   // cout << "2//" << s << "\n";
-  substring(s);
+  substring(s); // Fix this
   return;
 }
 void TM::third(string s) {
-  cout << "3//" << s << "\n";
+  // cout << "3//" << s << "\n";
+  subsequence(s);
   return;
 }
 void TM::run() {
@@ -417,21 +458,58 @@ void TM::substring(string pat) {
   int i = 0;
   ull n = pat.size();
   for (; i < 61; i++) {
-    if (lengths[i] > n) {
+    if (lengths[i] >= n) {
       break;
     }
   }
-  string txt = generate(i + 2);
-  // cout << i << endl;
+  string txt = generate(i + 3);
   ull index = KMPSearch(pat, txt);
-  // cout << txt.size() << endl;
-  // cout << index << endl;
   if (index == txt.size()) {
     cout << -1 << endl;
   } else {
-    cout << index << endl;
+    ull last = index + n - 1;
+    for (int j = i; j < i + 4; j++) {
+      if (lengths[j] > last) {
+        cout << j << " " << index << endl;
+        break;
+      }
+    }
   }
   return;
+}
+void TM::subsequence(string pat) {
+  int i = 0;
+  string::iterator pat_it = pat.begin();
+  ull n = 3 * pat.size();
+  for (; i < 61; i++) {
+    if (lengths[i] >= n) {
+      break;
+    }
+  }
+  string txt = generate(i);
+  string::iterator txt_it = txt.begin();
+
+  while (true) {
+    if (pat_it == pat.end()) {
+      ull index = txt_it - txt.begin();
+      for (int i = 0; i < 61; i++) {
+        if (lengths[i] >= index) {
+          cout << i << " " << index << endl;
+          return;
+        }
+      }
+    }
+    if (txt_it == txt.end()) {
+      cout << -1 << endl;
+      return;
+    }
+    if (*pat_it == *txt_it) {
+      pat_it++;
+      txt_it++;
+    } else {
+      txt_it++;
+    }
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -448,6 +526,11 @@ Expo::Expo(int set_size_, string fs_[]) {
     fs[i] = fs_[i];
   }
   cout << "Expo found\n";
+  for (int i = 0; i < set_size; i++) {
+    cout << i << ": " << fs[i] << endl;
+  }
+
+  init_matrix();
   return;
 }
 
@@ -492,6 +575,31 @@ void Expo::run() {
     } else {
       cout << endl;
     }
+  }
+}
+void Expo::init_matrix() {
+  matrix = new int *[set_size];
+  for (int i = 0; i < set_size; ++i) {
+    matrix[i] = new int[set_size];
+  }
+
+  for (int i = 0; i < set_size; i++) {
+    for (int j = 0; j < set_size; j++) {
+      matrix[i][j] = 0;
+    }
+  }
+  for (int i = 0; i < set_size; i++) {
+    int len = fs[i].length();
+    for (int j = 0; j < len; j++) {
+      matrix[int(fs[i][j]) - 97][i]++;
+    }
+  }
+
+  for (int i = 0; i < set_size; i++) {
+    for (int j = 0; j < set_size; j++) {
+      cout << matrix[i][j] << " ";
+    }
+    cout << "\n";
   }
 }
 
