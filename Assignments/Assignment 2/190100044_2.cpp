@@ -146,7 +146,7 @@ public:
 class Expo {
 public:
   int set_size;
-  vector<ull> lengths;
+  vector<vector<ull>> lengths;
   string *fs;
   int **matrix;
 
@@ -158,21 +158,23 @@ public:
   void third(string s);
   void run();
   void init_matrix();
-  void assign_length();
+  ull *multiply_mat_vec(ull *vec);
+  vector<ull> assign_length(int c);
+  char at_index(ull n, int a, int power);
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////// Declaration: Linear Word ////////////////////////////
+////////////////////////// Declaration: Poly Word ////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Linear Word
+// Poly Word
 // Bit of a weirdo
-class Linear {
+class Poly {
 public:
   int set_size;
   string *fs;
 
-  Linear(int set_size_, string fs_[]);
+  Poly(int set_size_, string fs_[]);
 
   void zeroth(ull n);
   void first(ull n);
@@ -300,10 +302,10 @@ void Fibo::substring(string pat) {
       break;
     }
   }
-  string txt = generate(i + 3);
+  string txt = generate(i + 4);
   ull index = KMPSearch(pat, txt);
   ull last = index + n - 1;
-  for (int j = i; j < i + 4; j++) {
+  for (int j = i; j < i + 5; j++) {
     if (lengths[j] > last) {
       cout << j << " " << index << endl;
       return;
@@ -457,24 +459,21 @@ string TM::generate(int n) {
 void TM::substring(string pat) {
   int i = 0;
   ull n = pat.size();
-  for (; i < 61; i++) {
+  for (; i < 87; i++) {
     if (lengths[i] >= n) {
       break;
     }
   }
-  string txt = generate(i + 3);
+  string txt = generate(i + 4);
   ull index = KMPSearch(pat, txt);
-  if (index == txt.size()) {
-    cout << -1 << endl;
-  } else {
-    ull last = index + n - 1;
-    for (int j = i; j < i + 4; j++) {
-      if (lengths[j] > last) {
-        cout << j << " " << index << endl;
-        break;
-      }
+  ull last = index + n - 1;
+  for (int j = i; j < i + 5; j++) {
+    if (lengths[j] > last) {
+      cout << j << " " << index << endl;
+      return;
     }
   }
+  cout << -1 << endl;
   return;
 }
 void TM::subsequence(string pat) {
@@ -525,21 +524,33 @@ Expo::Expo(int set_size_, string fs_[]) {
   for (int i = 0; i < set_size; i++) {
     fs[i] = fs_[i];
   }
-  cout << "Expo found\n";
-  for (int i = 0; i < set_size; i++) {
-    cout << i << ": " << fs[i] << endl;
-  }
+  // cout << "Expo found\n";
+  // for (int i = 0; i < set_size; i++) {
+  //   cout << i << ": " << fs[i] << endl;
+  // }
 
   init_matrix();
+  for (int i = 0; i < set_size; i++) {
+    lengths.push_back(assign_length(i));
+  }
   return;
 }
 
 void Expo::zeroth(ull n) {
-  cout << "0//" << n << "\n";
+  // cout << "0//" << n << "\n";
+  cout << lengths[0][n] << endl;
   return;
 }
 void Expo::first(ull n) {
-  cout << "1//" << n << "\n";
+  // cout << "1//" << n << "\n";
+  int power = 0;
+  for (; power < lengths[0].size(); power++) {
+    if (lengths[0][power] > n) {
+      break;
+    }
+  }
+  cout << at_index(n, 0, power) << endl;
+
   return;
 }
 void Expo::second(string s) {
@@ -595,47 +606,101 @@ void Expo::init_matrix() {
     }
   }
 
+  // for (int i = 0; i < set_size; i++) {
+  //   for (int j = 0; j < set_size; j++) {
+  //     cout << matrix[i][j] << " ";
+  //   }
+  //   cout << "\n";
+  // }
+}
+ull *Expo::multiply_mat_vec(ull *vec) {
+  ull *res;
+  res = new ull[set_size];
   for (int i = 0; i < set_size; i++) {
+    res[i] = 0;
     for (int j = 0; j < set_size; j++) {
-      cout << matrix[i][j] << " ";
+      res[i] += matrix[i][j] * vec[j];
     }
-    cout << "\n";
+  }
+  return res;
+}
+vector<ull> Expo::assign_length(int c) {
+  vector<ull> res;
+  ull len = 0;
+  res.push_back(1);
+  ull *vec = new ull[set_size];
+  for (int i = 0; i < set_size; i++) {
+    vec[i] = matrix[i][c];
+    len += vec[i];
+  }
+  res.push_back(len);
+  int count = 0;
+  while (count < 61) {
+    if (len > 1000000000000000000) {
+      break;
+    }
+    len = 0;
+    vec = multiply_mat_vec(vec);
+    for (int i = 0; i < set_size; i++) {
+      len += vec[i];
+    }
+    // cout << len << endl;
+    res.push_back(len);
+    count++;
+  }
+  return res;
+}
+char Expo::at_index(ull n, int a, int power) {
+  // cout << n << ";;" << a << ";;" << power << endl;
+  if (power == 0) {
+    return char(a + 97);
+  }
+
+  for (int j = 0; j < fs[a].size(); j++) {
+    char c = fs[a][j];
+    int ci = int(c) - 97;
+    // cout << c << "//\n";
+    if (n < lengths[ci][power - 1]) {
+      return at_index(n, ci, power - 1);
+    } else {
+      n -= lengths[ci][power - 1];
+    }
   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////// Definition: Linear Word /////////////////////////////
+////////////////////////// Definition: Poly Word /////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Linear Word
+// Poly Word
 // Bit of a weirdo
-Linear::Linear(int set_size_, string fs_[]) {
+Poly::Poly(int set_size_, string fs_[]) {
   set_size = set_size_;
   fs = new string[set_size];
   for (int i = 0; i < set_size; i++) {
     fs[i] = fs_[i];
   }
-  cout << "Linear found\n";
+  cout << "Poly found\n";
   return;
 }
 
-void Linear::zeroth(ull n) {
+void Poly::zeroth(ull n) {
   cout << "0//" << n << "\n";
   return;
 }
-void Linear::first(ull n) {
+void Poly::first(ull n) {
   cout << "1//" << n << "\n";
   return;
 }
-void Linear::second(string s) {
+void Poly::second(string s) {
   cout << "2//" << s << "\n";
   return;
 }
-void Linear::third(string s) {
+void Poly::third(string s) {
   cout << "3//" << s << "\n";
   return;
 }
-void Linear::run() {
+void Poly::run() {
   int ops;
   cin >> ops;
   int choice;
@@ -662,11 +727,27 @@ void Linear::run() {
     }
   }
 }
+// int **Poly::multiply_matrix(int **mat1, int **mat2) {
+//   res = new int *[set_size];
+//   for (int i = 0; i < set_size; ++i) {
+//     res[i] = new int[set_size];
+//   }
+//   int i, j, k;
+//   for (i = 0; i < set_size; i++) {
+//     for (j = 0; j < set_size; j++) {
+//       res[i][j] = 0;
+//       for (k = 0; k < set_size; k++)
+//         res[i][j] += mat1[i][k] * mat2[k][j];
+//     }
+//   }
+// }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int main() {
+  ios_base::sync_with_stdio(false);
+  cin.tie(NULL);
   int set_size;
   cin >> set_size >> ws;
 
@@ -695,7 +776,7 @@ int main() {
       Expo morphism(set_size, fs);
       morphism.run();
     } else {
-      Linear morphism(set_size, fs);
+      Poly morphism(set_size, fs);
       morphism.run();
     }
   }
