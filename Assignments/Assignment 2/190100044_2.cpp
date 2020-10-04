@@ -173,6 +173,7 @@ class Poly {
 public:
   int set_size;
   string *fs;
+  ull **matrix;
 
   Poly(int set_size_, string fs_[]);
 
@@ -181,6 +182,11 @@ public:
   void second(string s);
   void third(string s);
   void run();
+  void init_matrix();
+  ull **multiply_matrix(ull **mat1, ull **mat2);
+  ull *multiply_mat_vec(ull **mat, ull *vec);
+  ull **identity_matrix();
+  ull assign_length(ull n);
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -198,12 +204,12 @@ Fibo::Fibo() {
 
 void Fibo::zeroth(ull n) {
   // cout << "0//" << n << "\n";
-  cout << lengths[n] << endl;
+  cout << lengths[n] << "\n";
   return;
 }
 void Fibo::first(ull n) {
   // cout << "1//" << n << "\n";
-  cout << at_index(n) << endl;
+  cout << at_index(n) << "\n";
   return;
 }
 void Fibo::second(string s) {
@@ -239,7 +245,7 @@ void Fibo::run() {
       getline(cin, s);
       third(s);
     } else {
-      cout << endl;
+      cout << "\n";
     }
   }
 }
@@ -256,15 +262,15 @@ void Fibo::assign_length() {
   //   i++;
   // }
 
-  // cout << lengths[lengths.size() - 1] << endl;
-  // cout << i << endl;
+  // cout << lengths[lengths.size() - 1] << "\n";
+  // cout << i << "\n";
 
   lengths[0] = 1;
   lengths[1] = 2;
   for (int i = 2; i < 87; i++) {
     lengths[i] = lengths[i - 1] + lengths[i - 2];
   }
-  // cout << lengths[86] << endl;
+  // cout << lengths[86] << "\n";
 
   return;
 }
@@ -307,11 +313,11 @@ void Fibo::substring(string pat) {
   ull last = index + n - 1;
   for (int j = i; j < i + 5; j++) {
     if (lengths[j] > last) {
-      cout << j << " " << index << endl;
+      cout << j << " " << index << "\n";
       return;
     }
   }
-  cout << -1 << endl;
+  cout << -1 << "\n";
   return;
 }
 void Fibo::subsequence(string pat) {
@@ -331,13 +337,13 @@ void Fibo::subsequence(string pat) {
       ull index = txt_it - txt.begin();
       for (int i = 0; i < 87; i++) {
         if (lengths[i] >= index) {
-          cout << i << " " << index << endl;
+          cout << i << " " << index << "\n";
           return;
         }
       }
     }
     if (txt_it == txt.end()) {
-      cout << -1 << endl;
+      cout << -1 << "\n";
       return;
     }
     if (*pat_it == *txt_it) {
@@ -364,14 +370,14 @@ TM::TM() {
 
 void TM::zeroth(ull n) {
   // cout << "0//" << n << "\n";
-  cout << lengths[n] << endl;
+  cout << lengths[n] << "\n";
   return;
 }
 void TM::first(ull n) {
   // Count the number of ones in bit rep of n
   // (http://www.ams.org/publicoutreach/feature-column/fc-2013-09)
   // cout << "1//" << n << "\n";
-  cout << at_index(n) << endl;
+  cout << at_index(n) << "\n";
   return;
 }
 void TM::second(string s) {
@@ -407,7 +413,7 @@ void TM::run() {
       getline(cin, s);
       third(s);
     } else {
-      cout << endl;
+      cout << "\n";
     }
   }
 }
@@ -417,7 +423,7 @@ void TM::assign_length() {
     lengths[i] = x;
     x *= 2;
   }
-  // cout << lengths[60] << endl;
+  // cout << lengths[60] << "\n";
 
   return;
 }
@@ -469,11 +475,11 @@ void TM::substring(string pat) {
   ull last = index + n - 1;
   for (int j = i; j < i + 5; j++) {
     if (lengths[j] > last) {
-      cout << j << " " << index << endl;
+      cout << j << " " << index << "\n";
       return;
     }
   }
-  cout << -1 << endl;
+  cout << -1 << "\n";
   return;
 }
 void TM::subsequence(string pat) {
@@ -493,13 +499,13 @@ void TM::subsequence(string pat) {
       ull index = txt_it - txt.begin();
       for (int i = 0; i < 61; i++) {
         if (lengths[i] >= index) {
-          cout << i << " " << index << endl;
+          cout << i << " " << index << "\n";
           return;
         }
       }
     }
     if (txt_it == txt.end()) {
-      cout << -1 << endl;
+      cout << -1 << "\n";
       return;
     }
     if (*pat_it == *txt_it) {
@@ -526,7 +532,7 @@ Expo::Expo(int set_size_, string fs_[]) {
   }
   // cout << "Expo found\n";
   // for (int i = 0; i < set_size; i++) {
-  //   cout << i << ": " << fs[i] << endl;
+  //   cout << i << ": " << fs[i] << "\n";
   // }
 
   init_matrix();
@@ -538,7 +544,7 @@ Expo::Expo(int set_size_, string fs_[]) {
 
 void Expo::zeroth(ull n) {
   // cout << "0//" << n << "\n";
-  cout << lengths[0][n] << endl;
+  cout << lengths[0][n] << "\n";
   return;
 }
 void Expo::first(ull n) {
@@ -549,7 +555,7 @@ void Expo::first(ull n) {
       break;
     }
   }
-  cout << at_index(n, 0, power) << endl;
+  cout << at_index(n, 0, power) << "\n";
 
   return;
 }
@@ -584,7 +590,7 @@ void Expo::run() {
       getline(cin, s);
       third(s);
     } else {
-      cout << endl;
+      cout << "\n";
     }
   }
 }
@@ -644,14 +650,14 @@ vector<ull> Expo::assign_length(int c) {
     for (int i = 0; i < set_size; i++) {
       len += vec[i];
     }
-    // cout << len << endl;
+    // cout << len << "\n";
     res.push_back(len);
     count++;
   }
   return res;
 }
 char Expo::at_index(ull n, int a, int power) {
-  // cout << n << ";;" << a << ";;" << power << endl;
+  // cout << n << ";;" << a << ";;" << power << "\n";
   if (power == 0) {
     return char(a + 97);
   }
@@ -680,12 +686,21 @@ Poly::Poly(int set_size_, string fs_[]) {
   for (int i = 0; i < set_size; i++) {
     fs[i] = fs_[i];
   }
-  cout << "Poly found\n";
+  // cout << "Poly found\n";
+  // for (int i = 0; i < set_size; i++) {
+  //   cout << i << ": " << fs[i] << "\n";
+  // }
+
+  init_matrix();
   return;
 }
 
 void Poly::zeroth(ull n) {
-  cout << "0//" << n << "\n";
+  // cout << "0//" << n << "\n";
+  if (n == 0) {
+    cout << 1 << "\n";
+  }
+  cout << assign_length(n - 1) << "\n";
   return;
 }
 void Poly::first(ull n) {
@@ -723,24 +738,99 @@ void Poly::run() {
       getline(cin, s);
       third(s);
     } else {
-      cout << endl;
+      cout << "\n";
     }
   }
 }
-// int **Poly::multiply_matrix(int **mat1, int **mat2) {
-//   res = new int *[set_size];
-//   for (int i = 0; i < set_size; ++i) {
-//     res[i] = new int[set_size];
-//   }
-//   int i, j, k;
-//   for (i = 0; i < set_size; i++) {
-//     for (j = 0; j < set_size; j++) {
-//       res[i][j] = 0;
-//       for (k = 0; k < set_size; k++)
-//         res[i][j] += mat1[i][k] * mat2[k][j];
-//     }
-//   }
-// }
+void Poly::init_matrix() {
+  matrix = new ull *[set_size];
+  for (int i = 0; i < set_size; ++i) {
+    matrix[i] = new ull[set_size];
+  }
+
+  for (int i = 0; i < set_size; i++) {
+    for (int j = 0; j < set_size; j++) {
+      matrix[i][j] = 0;
+    }
+  }
+  for (int i = 0; i < set_size; i++) {
+    int len = fs[i].length();
+    for (int j = 0; j < len; j++) {
+      matrix[int(fs[i][j]) - 97][i]++;
+    }
+  }
+
+  // for (int i = 0; i < set_size; i++) {
+  //   for (int j = 0; j < set_size; j++) {
+  //     cout << matrix[i][j] << " ";
+  //   }
+  //   cout << "\n";
+  // }
+}
+ull **Poly::multiply_matrix(ull **mat1, ull **mat2) {
+  ull **res;
+  res = new ull *[set_size];
+  for (int i = 0; i < set_size; ++i) {
+    res[i] = new ull[set_size];
+  }
+  int i, j, k;
+  for (i = 0; i < set_size; i++) {
+    for (j = 0; j < set_size; j++) {
+      res[i][j] = 0;
+      for (k = 0; k < set_size; k++)
+        res[i][j] += mat1[i][k] * mat2[k][j];
+    }
+  }
+  return res;
+}
+ull *Poly::multiply_mat_vec(ull **mat, ull *vec) {
+  ull *res;
+  res = new ull[set_size];
+  for (int i = 0; i < set_size; i++) {
+    res[i] = 0;
+    for (int j = 0; j < set_size; j++) {
+      res[i] += mat[i][j] * vec[j];
+    }
+  }
+  return res;
+}
+ull **Poly::identity_matrix() {
+  ull **id;
+  id = new ull *[set_size];
+  for (int i = 0; i < set_size; ++i) {
+    id[i] = new ull[set_size];
+  }
+
+  for (int i = 0; i < set_size; i++) {
+    for (int j = 0; j < set_size; j++) {
+      id[i][j] = 0;
+    }
+    id[i][i] = 1;
+  }
+  return id;
+}
+ull Poly::assign_length(ull n) {
+  ull **mat = matrix;
+  ull **res = identity_matrix();
+  // cout << n;
+  while (n > 0) {
+    if (n % 2) {
+      res = multiply_matrix(res, mat);
+    }
+    n /= 2;
+    mat = multiply_matrix(mat, mat);
+  }
+  ull *vec = new ull[set_size];
+  for (int i = 0; i < set_size; i++) {
+    vec[i] = matrix[i][0];
+  }
+  ull *fin = multiply_mat_vec(res, vec);
+  ull len = 0;
+  for (int i = 0; i < set_size; i++) {
+    len += fin[i];
+  }
+  return len;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -756,7 +846,7 @@ int main() {
     getline(cin, fs[i]);
     // cout << fs[i] << "\n";
   }
-  // cout << endl;
+  // cout << "\n";
 
   string morph_type;
   if (set_size == 2 && fs[0] == "ab" && fs[1] == "a") {
