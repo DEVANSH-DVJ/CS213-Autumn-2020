@@ -560,11 +560,13 @@ void Expo::first(ull n) {
   return;
 }
 void Expo::second(string s) {
-  cout << "2//" << s << "\n";
+  // cout << "2//" << s << "\n";
+  cout << "\n";
   return;
 }
 void Expo::third(string s) {
-  cout << "3//" << s << "\n";
+  // cout << "3//" << s << "\n";
+  cout << "\n";
   return;
 }
 void Expo::run() {
@@ -704,15 +706,18 @@ void Poly::zeroth(ull n) {
   return;
 }
 void Poly::first(ull n) {
-  cout << "1//" << n << "\n";
+  // cout << "1//" << n << "\n";
+  cout << "\n";
   return;
 }
 void Poly::second(string s) {
-  cout << "2//" << s << "\n";
+  // cout << "2//" << s << "\n";
+  cout << "\n";
   return;
 }
 void Poly::third(string s) {
-  cout << "3//" << s << "\n";
+  // cout << "3//" << s << "\n";
+  cout << "\n";
   return;
 }
 void Poly::run() {
