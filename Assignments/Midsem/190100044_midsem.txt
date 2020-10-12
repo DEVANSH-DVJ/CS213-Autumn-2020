@@ -1,0 +1,240 @@
+190100044, Devansh Jain
+
+1.
+a.
+Definition of min
+min(0,0) = 0 (..1)
+min(0,next(y)) = 0 for all y (..2)
+min(next(x),0) = 0 for all x (..3)
+min(next(x),next(y)) = next(min(x,y)) for all x,y (..4)
+
+Similarly, Definition of max
+max(0,0) = 0 (..5)
+max(0,next(y)) = next(max(0,y)) for all y simplifies to max(0,next(y)) = next(y), further simplified to max(0,y) = y (..6)
+max(next(x),0) = next(max(x,0)) for all x simplifies to max(next(x),0) = next(x), further simplified to max(x,0) = x  (..7)
+max(next(x),next(y)) = next(max(x,y)) for all x,y (..8)
+
+b.
+Definition of add
+add(x,0) = x (..9)
+add(x,next(y)) = next(add(x,y)) (..10)
+Let us first prove associtiativity
+Base Case:
+add(add(a,b),0) = add(a,b)
+    = add(a,add(b,0))
+Induction Hypothesis:
+add(add(a,b),c) = add(a,add(b,c))
+Induction Step:
+add(add(a,b),next(c)) = next(add(add(a,b),c)))
+    = next(add(a,add(b,c)))
+    = add(a,next(add(b,c)))
+    = add(a,add(b,next(c)))
+Let us now prove commutativity (though given in slides itself).
+Base Case:
+add(0,0) = add(0,0)
+Induction Hypothesis:
+add(x,0) = x = add(0,x)
+Induction Step:
+add(next(x),0) = next(x)
+    = next(add(0,x))
+    = add(0,next(x))
+Now, induction on y
+Base Case:
+add(x,0) = add(0,x)
+Induction Hypothesis:
+add(x,y) = add(y,x)
+Induction Step:
+add(x,next(y)) = next(add(x,y))
+    = next(add(y,x))
+    = add(next(y), x)
+Therefore, add(x,y) = add(y,x) for all x,y
+which implies add(0,y) = add(y,0) = y
+
+Proof of add(x,y) = add(max(x,y),min(x,y)) for all x,y
+The proof uses induction on x first, and then uses induction on y.
+Induction on x
+Base Case:
+add(0,0) = add(min(0,0),max(0,0))
+Induction Hypothesis:
+add(x,0) = add(min(x,0), max(x,0)) which also implies x = add(x,0) = add(0,max(x,0)) = max(x,0)
+Induction Step:
+add(next(x),0)
+    = add(0,next(x)) (By commutativity)
+    = add(min(next(x),0), next(max(x,0))) (By induction hypothesis)
+    = add(min(next(x),0), max(next(x),0))
+Conclusion:
+add(x,0) = add(min(x,0), max(x,0)) for all x
+
+Induction on y
+Base Case:
+add(x,0) = add(min(x,0), max(x,0))
+add(0,y) = add(y,0) = add(min(y,0), max(y,0)) = add(min(0,y), max(0,y))
+Induction Hypothesis:
+add(x,y) = add(min(x,y), max(x,y))
+Induction Step:
+add(next(x),next(y))
+    = next(add(next(x),y))
+    = next(next(add(x,y)))
+    = next(next(add(min(x,y), max(x,y))))  (By induction hypothesis)
+    = next(add(min(x,y), next(max(x,y))))
+    = add(next(min(x,y)), next(max(x,y)))
+    = add(min(next(x),next(y)), max(next(x),next(y)))
+Conclusion:
+add(x,y) = add(min(x,y), max(x,y)) for all x,y
+    
+Can be proved in another (simpler) form with proving for (0,0) then (x,0) and (0,x) and then (x,y) as shown above.
+
+c.
+Proof of add(min(x,y),z) = min(add(x,z),add(y,z)) for all x,y,z
+The proof uses induction on z for all values of x,y
+Base Case:
+add(min(x,y),0)
+    = min(x,y)
+    = min(add(x,0), add(y,0))
+Induction Hypothesis:
+add(min(x,y),z) = min(add(x,z), add(x,y))
+Induction Step:
+add(min(x,y),next(z))
+    = next(add(min(x,y),z)) (By induction hypothesis)
+    = next(min(add(x,z), add(x,y)))
+    = min(next(add(x,z)), next(add(y,z)))
+    = min(add(x,next(z)), add(y,next(z)))
+Conclusion:
+add(min(x,y),z) = min(add(x,z),add(y,z)) for all x,y,z
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2.
+I would be using linked lists because in almost all operations links are to be broken and created.
+
+Data Structure:
+We have an array arr of length n, and a linked list part which essentially is list of all partitions.
+Each element of part itself is a list of address of elements of arr (or even the key of the element would work as arr is an array and an element can be accessed in O(1) time)
+We would try to maintain part in such a way that the list is sorted by partition size.
+
+initialize(n)
+Initially, part would have n elements, each element is a linked list to one element in arr.
+Initialize arr and part, both would take O(n) time. So, the entire function takes O(1) time.
+
+split(i)
+parti = arr[i] points to the part containing i, if it is singleton (we can use size()) then do nothing
+else as we also have stored the pointer(actually iterator) to the value of i in parti, we can remove it in O(1) time (advantage of list)
+now, we can create add another element to part which is a singleton list containing the pointer to value of i.
+
+shift(i,j)
+Similar to above, we get parti and the pointer(iterator) to the value of i in parti and get partj = arr[j] pointing to the part containing j.
+Now, we remove i from parti and then add it to partj (As we have pointer to all these values, we just need to access their values which again is O(1))
+If parti was initially singleton set then we must remove it from part as well.
+
+num_parts()
+Turns out this is super simple and all we need to do is find the length of the list part, so again O(1) time.
+
+max_part()
+This comes out to be tricker than above. I haven't talked about how I would maintain the list part as a sorted list.
+There must be a easier method, but the method I am going to describe is similar to the counter problem approach.
+We create another linked list length_list (insertion and deletion is the main reason why I am using linked list again and again) whose element is a linked list storing the pointer to the elements of part.
+Now, we use the fact that the length of each part increases or decreases by 1 in both split(i) and shift(i,j). (This is similar to the counter problem - Implementation exercise Q4).
+We maintain length_list as sorted and an element of it contains list of all paritions which has same length.
+Now, for split(i), the length of partition parti decreases by 1 and a new partition of length 1 is created (or nothing happens if parti itself was singleton already).
+Now, we remove parti from the list it was already in length_list and shift it right, if the list on the right has partitions of length one less than initial parti then add parti to that list else create a singleton list next to the initial list containing parti.
+Add the next element of part containing singleton list of i, to the right of the list length_list (or to the last element of length_list if there were already some singleton partitions).
+Similar can be done if the length of parti is increased by one.
+In shift(i,j), length of parti is decreased by one and length of partj is increased by one. Approach similar to split(i) would suffice.
+It has to be taken care of the fact that if we remove a partition (if it becomes empty), we must remove it from length_list as well.
+
+Once the above is cleared, return the length of any partition in the first element of length_list, which is the max length of partition we were desiring.
+
+To be noted that even length_list can be initalized in O(1) so won't affect time complexity of initialize(n)
+
+meet(Q)
+As we have O(n) time, we need not bother about length_list as it can refreshed at the end of this function.
+One thing we can directly infer from meet of two equivalence relations P and Q is that P and Q would share partition iff two elements share partition in both P and Q.
+We would have to take intersections of partitions (non-singleton partitions only) and all of whom are remaining go as singleton sets.
+
+
+join(Q)
+As we have O(n) time, we need not bother about length_list as it can refreshed at the end of this function.
+One thing we can directly infer from join of two equivalence relations P and Q is that P and Q would share partition iff two elements share partition in at least one of P and Q.
+We would have to take unions of partitions (non-singleton partitions only) sharing a common element. This can be done recursively, like take an element and combine the partitions containing it. And by combining all we have to do is add one linked list into another (in this case, partition of Q containing i is to be added at the end of the partition of P containing i. Then remove the partition from Q and if for some j in future its partition in Q has already been merge with some partition in P, then merge the partition of P containing j into that partition).
+Taking union can be justified by transitivity.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3.
+a.
+We can prove the requried result by proving the following two claims:
+(i) Every element is part of at least one maximal well-formed substring.
+(ii) Two maximal well-formed substrings don't overlap.
+
+(i) It can seen that {a_i} itself is a well-formed substring.
+Every well-formed substring s would be proper substring of a maximal well-formed substring or itself be a maximal well-formed substring as it would then have no well-formed substring of which s is a proper substring of.
+This means that a_i would have to be part of at least maximal one well-formed substring (if no bigger (superset to other) well-formed substring is there then {a_i} itself is a maximal well-formed substring)
+
+(ii) For the sake of contradiction, say two distinct maximal well-formed substrings {ai1, ..., aj1}(i1<=j1) and {ai2, ..., aj2}(i2<=j2) exist which overlap that is i2<=j1.
+By distinct, either i1!=i2 or j1!=j2.
+i1<=i2 and j1<=j2, else one of the well-formed substring would be a proper substring of other, violating the definition.
+By definition, ai1<=ak1<=aj1 for all i1<=k1<=j1 and ai2<=ak2<=aj2 for all i2<=k2<=j2.
+As i2<=j1, we get ai1<=ai2<=aj1 and ai2<=aj1<=aj2.
+From above two statements, we can see that for all k such that i1<=k<=j2, ai1<=ak<=aj2, meaning that {ai1, ..., aj2} is a well-formed substring.
+By definition of maximal well-formed substring, {ai1, ..., aj1} can not be a proper substring of {ai1, ..., aj2} and as j1<=j2. So, j1=j2.
+Similarly, i1=i2.
+This contradicts the assumption that the substrings are distinct.
+
+Thus, Two maximal well-formed substrings don't overlap.
+
+
+From (i) and (ii), we can see that every element would have to belong to exactly one maximal well-formed substring (or it would violated either of the two proven claims)
+
+
+b.
+We need to partition the string such that each part is a maximal well-formed string. (I proved above that well-formed substrings don't overlap and that they (together) cover each and every element of the string).
+
+So, we would have to traverse the string one or more times to split it thus, taking O(n) time.
+
+One algorithm which comes to mind is based on one of the quiz functions.
+Given the array arr of integers, we create another array gl which holds the index of the nearest element to the left which is larger than it.
+Similarly, we also create another array lr which hold the index of the nearest element to the right which is smaller than it.
+Both of these would take only O(n) time (We utilized in a quiz and a lab and also discussed in the class about it)
+
+Now, we traverse the string again, and this time partitioning it whenever lr[i] = i+1 and gl[i+1] = i.
+This essentially divides the array into segments of monotonic increasing partitions, now all we need to do is join them to form maximal well-formed substrings. This again takes O(n) time.
+
+Due to time constraints, I will leave it here.
+Something we could have used to go ahead is to create a similar array and having each element as partition described by its max and min and then combine them.
+We can prove that combining would take O(n) time.
+
+
+
+
+
+
+
+
+Sorry for the typos and Thank you.
