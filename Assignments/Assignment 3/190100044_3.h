@@ -31,7 +31,9 @@ public:
   void resize(int m);
 
   // helper functions
+  void collapse();
   long count();
+  long count_nodes();
   void print();
 };
 
@@ -118,8 +120,6 @@ void quad_tree::set(int x1, int y1, int x2, int y2, int b) {
     this->sub10 = NULL;
     this->sub11 = NULL;
     this->value = b;
-    // std::cout << "xx" << b << std::endl;
-
     return;
   }
 
@@ -174,6 +174,7 @@ void quad_tree::set(int x1, int y1, int x2, int y2, int b) {
     }
     this->sub11->set(x_, y_, x2 - this->width / 2, y2 - this->width / 2, b);
   }
+  this->collapse();
 
   return;
 }
@@ -233,6 +234,7 @@ void quad_tree::overlap(quad_tree const &Q) {
       this->sub01->overlap(*Q.sub01);
       this->sub10->overlap(*Q.sub10);
       this->sub11->overlap(*Q.sub11);
+      this->collapse();
       return; // this->value = -1 and Q->value = -1
     }
   }
@@ -272,6 +274,7 @@ void quad_tree::intersect(quad_tree &Q) {
       this->sub01->intersect(*Q.sub01);
       this->sub10->intersect(*Q.sub10);
       this->sub11->intersect(*Q.sub11);
+      this->collapse();
       return; // this->value = -1 and Q->value = -1
     }
   }
@@ -347,6 +350,37 @@ void quad_tree::resize(int m) {
   }
 }
 
+void quad_tree::collapse() {
+  if (this->value != -1) {
+    return;
+  }
+
+  if (this->sub00->value == 0 && this->sub01->value == 0 &&
+      this->sub10->value == 0 && this->sub11->value == 0) {
+    delete this->sub00;
+    delete this->sub01;
+    delete this->sub10;
+    delete this->sub11;
+    this->sub00 = NULL;
+    this->sub01 = NULL;
+    this->sub10 = NULL;
+    this->sub11 = NULL;
+    this->value = 0;
+  } else if (this->sub00->value == 1 && this->sub01->value == 1 &&
+             this->sub10->value == 1 && this->sub11->value == 1) {
+    delete this->sub00;
+    delete this->sub01;
+    delete this->sub10;
+    delete this->sub11;
+    this->sub00 = NULL;
+    this->sub01 = NULL;
+    this->sub10 = NULL;
+    this->sub11 = NULL;
+    this->value = 1;
+  }
+  return;
+}
+
 long quad_tree::count() {
   if (this->value == 0) {
     return long(0);
@@ -358,9 +392,19 @@ long quad_tree::count() {
   }
 }
 
+long quad_tree::count_nodes() {
+  if (this->value != -1) {
+    return long(1);
+  } else {
+    return long(1) + this->sub00->count_nodes() + this->sub01->count_nodes() +
+           this->sub10->count_nodes() + this->sub11->count_nodes();
+  }
+}
+
 void quad_tree::print() {
   std::cout << "N: " << n << std::endl;
   std::cout << "Width: " << width << std::endl;
+  std::cout << "Nodes: " << this->count_nodes() << std::endl;
   for (int i = 0; i < this->width; i++) {
     for (int j = 0; j < this->width; j++) {
       std::cout << this->get(i, j) << " ";
