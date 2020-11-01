@@ -1,5 +1,4 @@
 #include "190100044_3.h"
-#include <iostream>
 
 using namespace std;
 

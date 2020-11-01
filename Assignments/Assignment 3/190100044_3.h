@@ -28,7 +28,10 @@ public:
   void intersect(quad_tree &Q);
   void complement();
 
+  void resize(int m);
+
   // helper functions
+  long count();
   void print();
 };
 
@@ -277,18 +280,82 @@ void quad_tree::intersect(quad_tree &Q) {
 void quad_tree::complement() {
   if (this->value == 0) {
     this->value = 1;
-    return;
-  }
-  if (this->value == 1) {
+    return; // value = 0
+  } else if (this->value == 1) {
     this->value = 0;
-    return;
+    return; // value = 1
+  } else {
+    this->sub00->complement();
+    this->sub01->complement();
+    this->sub10->complement();
+    this->sub11->complement();
+    return; // value = -1
   }
-  this->sub00->complement();
-  this->sub01->complement();
-  this->sub10->complement();
-  this->sub11->complement();
+}
 
-  return;
+void quad_tree::resize(int m) {
+  if (this->n == m) {
+    return; // 0 <= n = m
+  } else if (this->n < m) {
+    if (this->value != -1) {
+      this->n = m;
+      this->width = (1 << n);
+      return; // 0 <= n < m and value = 0,1
+    } else {
+      this->sub00->resize(m - 1);
+      this->sub01->resize(m - 1);
+      this->sub10->resize(m - 1);
+      this->sub11->resize(m - 1);
+      this->n = m;
+      this->width = (1 << n);
+      return; // 0 <= n < m and value = -1
+    }
+  } else {
+    if (this->value != -1) {
+      this->n = m;
+      this->width = (1 << n);
+      return; // n > m >= 0 and value = 0,1
+    } else {
+      if (m == 0) {
+        long c = this->count();
+        if (c < long(this->width) * long(this->width) / 2) {
+          this->value = 0;
+        } else {
+          this->value = 1;
+        }
+        delete this->sub00;
+        delete this->sub01;
+        delete this->sub10;
+        delete this->sub11;
+        this->sub00 = NULL;
+        this->sub01 = NULL;
+        this->sub10 = NULL;
+        this->sub11 = NULL;
+        this->n = m;
+        this->width = (1 << n);
+        return; // n > m = 0 and value = -1
+      } else {
+        this->sub00->resize(m - 1);
+        this->sub01->resize(m - 1);
+        this->sub10->resize(m - 1);
+        this->sub11->resize(m - 1);
+        this->n = m;
+        this->width = (1 << n);
+        return; // n > m > 0 and value = -1
+      }
+    }
+  }
+}
+
+long quad_tree::count() {
+  if (this->value == 0) {
+    return long(0);
+  } else if (this->value == 1) {
+    return long(this->width) * long(this->width);
+  } else {
+    return this->sub00->count() + this->sub01->count() + this->sub10->count() +
+           this->sub11->count();
+  }
 }
 
 void quad_tree::print() {
