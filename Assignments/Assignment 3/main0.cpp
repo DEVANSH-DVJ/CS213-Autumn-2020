@@ -2,6 +2,12 @@
 
 using namespace std;
 
+int *func(int x) {
+  int *t = new int(x);
+  (*t)++;
+  return t;
+}
+
 int main() {
   quad_tree qt1(0);
   quad_tree qt2(qt1);
@@ -51,6 +57,9 @@ int main() {
   // qt2.intersect(qt1);
   // qt2.print();
   // cout << endl;
+
+  // int *t = func(5);
+  // cout << t << "//" << *t << endl;
 
   return 0;
 }
