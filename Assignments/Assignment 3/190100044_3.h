@@ -344,6 +344,7 @@ void quad_tree::resize(int m) {
         this->sub11->resize(m - 1);
         this->n = m;
         this->width = (1 << n);
+        this->collapse();
         return; // n > m > 0 and value = -1
       }
     }
