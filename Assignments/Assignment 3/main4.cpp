@@ -9,7 +9,9 @@ int main() {
   qt1.print();
   cout << endl;
 
-  qt1.extract(0, 14, 4);
+  qt1.resize(20);
+  qt1.extract(0, 1400, 19);
+  qt1.resize(5);
   qt1.print();
   cout << endl;
 
