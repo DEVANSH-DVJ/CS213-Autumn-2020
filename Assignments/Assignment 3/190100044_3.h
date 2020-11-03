@@ -71,43 +71,26 @@ quad_tree::quad_tree(quad_tree const &Q) {
   this->width = Q.width;
   this->value = Q.value;
 
-  if (Q.sub00 != NULL) { // Remove
-    this->sub00 = new quad_tree(*Q.sub00);
-  } else {
+  if (this->value != -1) {
     this->sub00 = NULL;
-  }
-  if (Q.sub01 != NULL) {
-    this->sub01 = new quad_tree(*Q.sub01);
-  } else {
     this->sub01 = NULL;
-  }
-  if (Q.sub10 != NULL) {
-    this->sub10 = new quad_tree(*Q.sub10);
-  } else {
     this->sub10 = NULL;
-  }
-  if (Q.sub11 != NULL) {
-    this->sub11 = new quad_tree(*Q.sub11);
-  } else {
     this->sub11 = NULL;
+  } else {
+    this->sub00 = new quad_tree(*Q.sub00);
+    this->sub01 = new quad_tree(*Q.sub01);
+    this->sub10 = new quad_tree(*Q.sub10);
+    this->sub11 = new quad_tree(*Q.sub11);
   }
 
   return;
 }
 
 quad_tree::~quad_tree() {
-  if (this->sub00 != NULL) { // Remove
-    delete this->sub00;
-  }
-  if (this->sub01 != NULL) {
-    delete this->sub01;
-  }
-  if (this->sub10 != NULL) {
-    delete this->sub10;
-  }
-  if (this->sub11 != NULL) {
-    delete this->sub11;
-  }
+  delete this->sub00;
+  delete this->sub01;
+  delete this->sub10;
+  delete this->sub11;
   return;
 }
 
